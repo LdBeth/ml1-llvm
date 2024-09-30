@@ -73,11 +73,10 @@ void
 lowl_puts(char *str)
 {
 	char *ptr = str;
-	while ( *ptr != '\0' ) {
-		if ( *ptr == '$' )
-			putc('\n', errorstream);
-		else
-			putc(*ptr, errorstream);
+	while (  *ptr != '\0' ) {
+		char c = *ptr;
+		if ( c == '$' ) c = '\n';
+		putc(c, errorstream);
 		ptr++;
 	}
 }
@@ -91,7 +90,7 @@ lowl_digit(uint8_t c)
 uint8_t
 lowl_punctuation(uint8_t c)
 {
-	return ( (c >= 'A' && c <= 'Z') 
+	return ( (c >= 'A' && c <= 'Z')
 		|| (c >= 'a' && c <= 'z')
 		|| (c >= '0' && c <= '9') ) ? 0 : 1;
 }

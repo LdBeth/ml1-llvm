@@ -127,15 +127,15 @@ arg_parse(int argc, char *argv[])
 		else if ( *argv[argno] == '-' ) {
 			if ( !strcmp(argv[argno], "-v") )
 				opt_v = 1;
-			else if ( !strcmp(argv[argno], "-w") 
-				  && wspace == 0 
+			else if ( !strcmp(argv[argno], "-w")
+				  && wspace == 0
 				  && next_arg() )
 					wspace = strtoul(argv[argno], NULL, 0);
-			else if ( !strcmp(argv[argno], "-d") 
-				  && debug == stderr 
+			else if ( !strcmp(argv[argno], "-d")
+				  && debug == stderr
 				  && next_arg() )
 					debug = get_file(argv[argno], "w");
-			else if ( !strcmp(argv[argno], "-o") 
+			else if ( !strcmp(argv[argno], "-o")
 				  && next_arg() )
 					add_ofile(argv[argno]);
 			else usage(argv[0]);
@@ -159,6 +159,7 @@ main(int argc, char *argv[])
 		infs++;
 		input[0] = stdin;
 	}
+	SVAR(11) = infs;
 
 	if ( opt_v )
 		version();
@@ -176,7 +177,8 @@ main(int argc, char *argv[])
 	lowl_runtime_fini();
 	ml1_fini();
 
-	return 0;
+	/* Test error count S5 */
+	return SVAR(5) > 0;
 }
 
 
@@ -218,17 +220,15 @@ mdread(uint8_t *c)
 retry:
 	if ( (inno = SVAR(10)) == 0 )
 		return 1;
-	if ( inno > infs + 100 ||
-		(inno <= 100 && inno > infs) ||
-		inno < 0 ) {
-		fprintf(debug, "S10 has illegal value, viz %d\n", inno);
-		exit(-2);
-	}
 	/* Reset input position */
-	if ( inno > 100 ) {
+	if ( inno > 100 && inno <= infs + 100 ) {
 		inno -= 100;
 		SVAR(10) = inno;
 		rewind(input[inno - 1]);
+	}
+	else if ( inno > infs || inno < 0 ) {
+		printf("S10 has illegal value, viz %d\n", inno);
+		exit(-2);
 	}
 	r = getc(input[inno - 1]);
 	if ( r == EOF ) {
@@ -279,24 +279,13 @@ mdop()
 		break;
 	default: /* Division. */
 		{
-			/* Divide rounding to the lowest number.
-			   Use ANSI C's integer division (that rounds
-			   to zero) and fix the result if needed. */
-			ldiv_t res;
-			int sign = 0; /* Zero is positive. */
-
+			/* Divide rounding to the lowest number. */
 			if ( meval == 0 )
 				return 0; /* Overflow. */
-			/* Calculate the sign of the result. */
-			if ( meval < 0 ) sign = !sign;
-			if ( op1 < 0 ) sign = !sign;
-
-			res = ldiv(op1, meval);
-			if ( sign && (res.rem != 0) ) {
-				/* Fix it. */
-				res.quot -= 1;
-			}
-			LOWLVAR(MEVAL) = res.quot;
+			/* Do integer floor division. */
+			lowlint_t a = op1;
+			lowlint_t b = meval;
+			LOWLVAR(MEVAL) = a/b - (a%b!=0 && (a^b)<0);
 			return 1;
 		}
 		break;

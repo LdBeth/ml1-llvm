@@ -6,8 +6,9 @@ This implementation is based on version AJB of LOWL ML/I.
 This manual is based on ML/I User's Manual Appendix R for UNIX.
 
 .SH Restrictions and Additions
-This implementation of ML/I contains all the features described in the
-ML/I User's Manual, 6th Edition, February 2004.
+This implementation of ML/I contains all the features expect character
+variable described in the ML/I User's Manual, 6th Edition, February
+2010.
 
 .SH Operating instructions and I/O
 .IP -v
@@ -62,3 +63,50 @@ compatibility, a nonzero value in \fIS22\fR also causes output to file
 2 to take place; the presence of this value or the presence of the
 appropriate bit in \fIS21\fR will cause output to take place, although
 the presence of both does not imply that output takes place twice.
+
+.SH Use of S1-S9
+.IP S1
+If \fIS1\fR is one, the imaginary startline character is inserted on
+input. If \fIS1\fR is zero, no startlines are inserted; this is the
+initial setting.
+.IP S2
+The current source text line number is held in \fIS2\fR; it may be
+changed at any time.
+.IP S3
+If \fIS3\fR is one, the error message normally generated if a warning
+marker is not followed by a macro name is suppressed. If \fIS3\fR is
+zero (the initial value), the message is produced.
+.IP S4
+If \fIS4\fR is one, the context print-out normally given after a call
+of MCNOTE is suppressed. If S4 is zero, the context print-out is
+given; this is the initial setting.
+.IP S5
+Count of processing errors.
+.IP S6
+Not currently used.
+.IP S7
+Not currently used.
+.IP S8
+Not currently used.
+.IP S9
+Not currently used.
+
+.SH Use of S1-S23
+.IP S10
+Controls input selection.
+.IP S11
+Number of input files.
+.IP S12-S17
+Not currently used.
+.IP S18
+If nonzero, processing statistics are given at the end.
+.IP S19
+Not currently used.
+.IP S20
+Not currently used.
+.IP S21
+Controls output.
+.IP S22
+Controls output.
+.IP S23
+Contains the current revert stream.
