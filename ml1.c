@@ -277,7 +277,7 @@ mdop()
 		LOWLVAR(MEVAL) = meval;
 		return 1;
 		break;
-	default: /* Division. */
+	case 2: /* Division. */
 		{
 			/* Divide rounding to the lowest number. */
 			if ( meval == 0 )
@@ -289,5 +289,15 @@ mdop()
 			return 1;
 		}
 		break;
+	case 3: /* land */
+		LOWLVAR(MEVAL) = op1 & meval;
+		return 1;
+		break;
+	case 4: /* lor */
+		LOWLVAR(MEVAL) = op1 | meval;
+		return 1;
+		break;
+	default: /* error */
+		return 0;
 	}
 }

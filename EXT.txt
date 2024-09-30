@@ -1,0 +1,76 @@
+Extension to LOWL
+
+http://www.ml1.org.uk/htmldoc/lowlmap.html
+
+ORV var
+set reg_a to reg_a lor var (Currently not used)
+
+
+The GETEXP subroutine in L, with modification to handle '&' and '|':
+
+SUBROUTINE GETEXP
+
+        SET SUM = 0
+        SET OLIDPT = SPT
+        SETSW VARSW = TRUE
+        SET MEVAL = 0
+[GXP1]  SETSW OPSW = 0
+[GXP3]  SET NEGVAL = 0
+[GXP6]  CALL GSATOM EXIT GMEXIT
+        CHARMATCH IDPT,'+' GOING GMP,'-' GOING GMM,'*' GOING GMT,'/' GOING GMD,'&' GOING GMA,'|' GOING GMO
+        IF VARSW = FALSE THEN GO TO ERLIA
+        CALL MDNUM EXIT GXP2
+        GO TO GXP5
+
+[GXP2]  CALL GMEADD
+[GXP5]  IF NEGVAL = 1 THEN /-OVP-/SET MEVAL = -MEVAL
+        SETSW VARSW = FALSE
+        IF OPSW = 0 THEN GO TO GXP3
+        CALL MDOP
+        GO TO GXP1
+
+//MINUS AND PLUS//
+
+[GMM]   SET NEGVAL = -NEGVAL+1
+[GMP]   /-OVP-/SET SUM = SUM+MEVAL
+[GXP4]  SETSW VARSW = TRUE
+        SET MEVAL = 0
+        GO TO GXP6
+
+//LAND AND LOR//
+
+[GMA]   SETSW OPSW = 3
+        GO TO GMT1
+[GMO]   SETSW OPSW = 4
+        GO TO GMT1
+		
+
+//DIVIDE AND TIMES//
+
+[GMD]   SETSW OPSW = 2
+        GO TO GMT1
+
+[GMT]   SETSW OPSW = 1
+[GMT1]  IF VARSW = TRUE THEN GO TO ERLIA
+        SET OP1 = MEVAL
+        GO TO GXP4
+
+[GMEXIT]        IF VARSW = TRUE THEN GO TO ERLIA
+        /-OVP-/SET MEVAL = MEVAL+SUM
+        SET IDPT = OLIDPT
+        RETURN FROM GETEXP
+
+ENDSUB
+
+
+We can see the that to handle precedence and unary + and - operator,
+the logic is tightly coupled and the only place that allows us to
+extend operators, without significantly rewrite this subrountine, is
+the MDOP external subrountine.
+
+Thus although it is weird and breaks C's precedence rule.
+
+MCINS % .
+%1+1|2.
+
+is equal to 1+(1|2)

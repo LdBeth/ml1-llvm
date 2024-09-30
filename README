@@ -15,7 +15,7 @@ of other programs.
 
 A LOWL-based program is composed of a machine-independent (MI) part and a
 machine depended (MD) part.
-The MI part is simply the collection of routines and data defined in the 
+The MI part is simply the collection of routines and data defined in the
 LOWL sources.
 The MD part instead consists of LOWL extensions and runtime routines used
 for I/O and actual starting of the program.
@@ -28,7 +28,7 @@ Prerequisites for compiling ML/I
 
 0. LLVM must be installed in your system. Specifically, you will need 'llc',
    'opt' and 'llvm-as' to be accessible from your PATH.
-1. 'lex' and 'yacc' (or more commonly, bison and flex) should be installed 
+1. 'lex' and 'yacc' (or more commonly, bison and flex) should be installed
    in your system.
 
 
@@ -36,7 +36,10 @@ How to compile ML/I.
 
 0. Clean the current tree of temporary/old builds, typing 'make clean'.
 1. Dowload ML/I LOWL sources from the ML/I Macro Processor site[4].
-2. Type 'make ML1SRC=<path to ml1 lowl sources>'
+   Convert the source to UNIX style newlines using dos2unix.
+2. Optinally, apply patch.txt to ml1.lwl to have logical '&' '|' and
+   omitting end of process message by default (controlled by S18).
+3. Type 'make ML1SRC=<path to ml1 lowl sources>'
 
 If everything goes fine, you should have a 'ml1' executable, which is
 a simple ML/I macro processor that gets input from stdin and write output
@@ -47,6 +50,7 @@ How to compile LOWL Test.
 
 0. Make sure your current source tree is clean.
 1. Download LOWL Test sources from the ML/I Macro Processor site[5].
+   Convert the source to UNIX style newlines using dos2unix.
 2. type 'make lowltest LOWLTESTSRC=<path to lowl test sources>'
 
 
@@ -55,6 +59,6 @@ Notes.
 [1] http://www.ml1.org.uk, the ML/I Macro Processor site.
 [2] http://www.ml1.org.uk/htmldoc/lowlmap.html
 [3] http://www.ml1.org.uk/htmldoc/lowlml1.html
-[4] http://www.ml1.org.uk/tgz/lowlml1.tar.gz, or check in the Source Code 
+[4] http://www.ml1.org.uk/tgz/lowlml1.tar.gz, or check in the Source Code
     section of http://www.ml1.org.uk/implementation.html; older versions
     are also available at http://www.ml1.org.uk/archive.html

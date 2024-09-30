@@ -1,8 +1,7 @@
 .TH ML1 1 "September 2024" "Version 0.11"
 .SH ML/I User's Manual -- Appendix RR
-
 This implementation is based on version AJB of LOWL ML/I.
-
+.LP
 This manual is based on ML/I User's Manual Appendix R for UNIX.
 
 .SH Restrictions and Additions
@@ -32,14 +31,14 @@ used. The name - is also taken to mean the standard input.
 .SH Control of input
 Input may be read from any one of the input streams; the value of \fIS10\fR
 controls the selection. The possible values are 1-5 or 101-105.
-
+.LP
 If \fIS10\fR is set to a value between 101 and 105, 100 is subtracted from
 that value to obtain the number of the file to be selected for input;
 the modified value is also stored back into \fIS10\fR. The difference
 between this and the use of values 1 to 5 is that the corresponding
 file is repositioned at its start; this is useful where a set of
 macros require multiple passes over a source file.
-
+.LP
 When the end of an input stream is reached, ML/I checks to see if it
 is the \(dqrevert stream\(dq. If it is, the process is terminated;
 otherwise input is switched to the revert stream, and processing
@@ -99,7 +98,10 @@ Number of input files.
 .IP S12-S17
 Not currently used.
 .IP S18
-If nonzero, processing statistics are given at the end.
+If bit 2^0 is nonzero, a list of the currently defined constructions
+will be given at the end.
+.LP
+If bit 2^1 is nonzero, processing statistics are given at the end.
 .IP S19
 Not currently used.
 .IP S20
