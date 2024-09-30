@@ -948,6 +948,21 @@ void emit_andl(uintptr_t n)
 }
 
 
+void emit_orv(char *v)
+{
+#ifdef LOWL_ML1
+	static int cnt = 0;
+	w("%%orv.v.%d = load %%LLNUM, %%LLNUM* @%s\n", cnt, v);
+	w("%%orv.a.%d = load %%LLNUM, %%LLNUM* %%A_REG\n", cnt);
+	w("%%orv.r.%d = or %%LLNUM %%orv.v.%d, %%orv.a.%d\n",
+	  cnt, cnt, cnt);
+	w("store %%LLNUM %%orv.r.%d, %%LLNUM* %%A_REG\n", cnt);
+	cnt++;
+#else
+	EMIT_PANIC("LOWL mapper compiled without ML/I exentions.");
+#endif
+}
+
 void emit_orl(uintptr_t n)
 {
 #ifdef LOWL_ML1

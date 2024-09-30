@@ -98,6 +98,7 @@ void yyerror(char *);
 "LHV"		{	return LHV;	}
 "LINKR"		{	return LINKR;	}
 "LINKB"		{	return LINKB;	}
+"ORV"		{	return ORV;	}
 "ORL"		{	return ORL;	}
 
 "'"[^'\n]+"'"	{

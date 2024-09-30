@@ -103,7 +103,7 @@ uintptr_t 	num;
 %token EOL 
 
 /* ML/I extensions tokens. */
-%token HASH THASH RL WTHS STOPCD SLREP LINKR LINKB ORL
+%token HASH THASH RL WTHS STOPCD SLREP LINKR LINKB ORV ORL
 %type <chr> ml1_charname
 
 %type <str> v
@@ -306,6 +306,7 @@ ml1_table_statement:
 ml1_code_statement:
 	LINKR SYMBOL		{ emit_linkr($2); }	/* ML/I */
 	| LINKB			{ emit_linkb(); }	/* ML/I */
+	| ORV v 		{ emit_orv($2); }
 	| ORL nof		{ emit_orl($2); }	/* ML/I */
 	;
 

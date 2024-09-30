@@ -51,6 +51,7 @@ void emit_multl(intptr_t nof);
 void emit_bump(char *v, uintptr_t nof);
 void emit_andv(char *v);
 void emit_andl(uintptr_t n);
+void emit_orv(char *v);
 void emit_orl(uintptr_t n);
 void emit_cav(char *v);
 void emit_cal(intptr_t nof);
