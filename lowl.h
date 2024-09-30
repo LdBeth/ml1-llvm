@@ -26,4 +26,7 @@ void lowl_runtime_init(size_t workspace, FILE *errstream);
 void lowl_runtime_fini(void);
 void lowl_run(void);
 
+#define likely(x)      __builtin_expect(!!(x), 1)
+#define unlikely(x)    __builtin_expect(!!(x), 0)
+
 #endif /* _LOWL_H */

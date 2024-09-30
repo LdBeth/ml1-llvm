@@ -200,15 +200,12 @@ mdouch(uint8_t c)
 	lowlint_t ouflags = SVAR(21);
 	if ( ouflags & 1 )
 		putc(c, output[0]);
-	if ( (ouflags & 2) || (SVAR(22) != 0) )
-		if ( output[1] != NULL )
-			putc(c, output[1]);
-	if ( ouflags & 4)
-		if ( output[2] != NULL )
-			putc(c, output[2]);
-	if ( ouflags & 8)
-		if ( output[3] != NULL )
-			putc(c, output[3]);
+	if ( ((ouflags & 2) || (SVAR(22) != 0)) && output[1] != NULL )
+		putc(c, output[1]);
+	if ( ouflags & 4 && output[2] != NULL )
+		putc(c, output[2]);
+	if ( ouflags & 8 && output[3] != NULL )
+		putc(c, output[3]);
 }
 
 
@@ -218,20 +215,20 @@ mdread(uint8_t *c)
 	int r;
 	int inno;
 retry:
-	if ( (inno = SVAR(10)) == 0 )
+	if ( unlikely((inno = SVAR(10)) == 0) )
 		return 1;
 	/* Reset input position */
-	if ( inno > 100 && inno <= infs + 100 ) {
+	if ( unlikely(inno > 100 && inno <= infs + 100) ) {
 		inno -= 100;
 		SVAR(10) = inno;
 		rewind(input[inno - 1]);
 	}
-	else if ( inno > infs || inno < 0 ) {
+	else if ( unlikely(inno > infs || inno < 0) ) {
 		printf("S10 has illegal value, viz %d\n", inno);
 		exit(-2);
 	}
 	r = getc(input[inno - 1]);
-	if ( r == EOF ) {
+	if ( unlikely(r == EOF) ) {
 		int revert = SVAR(23);
 		if ( inno == revert )
 			return 1;
