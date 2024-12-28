@@ -44,4 +44,4 @@ lex.yy.c: mapper.l y.tab.c
 	$(LEX) mapper.l
 
 clean:
-	-rm *.o lex.yy.c y.tab.c y.tab.h ml1-mapper *.llvm *.bc *.llvm.s
+	-rm -f *.o lex.yy.c y.tab.c y.tab.h ml1-mapper *.llvm *.bc *.llvm.s

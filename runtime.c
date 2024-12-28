@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "lowl.h"
 
-void lowl_main();
+extern void lowl_main(char *, char *);
 
 /* Default stack size. */
 #define LOWL_STACKSZ	(0x10000*sizeof(lowlint_t))
