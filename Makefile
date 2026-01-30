@@ -2,7 +2,9 @@
 ML1SRC?= ml1.lwl
 LOWLTESTSRC?= ltestl4a.lwl
 CFLAGS+= -Wall -O3
-TARGET=$(shell gcc -dumpmachine)
+TARGET=arm64-apple-macosx26.0.0
+YACC=bison
+LEX=flex
 
 # The LOWL_REGSIZE variable controls the bisize of LOWL register.
 #
@@ -13,14 +15,11 @@ ifdef LOWL_REGSIZE
 CPPFLAGS+= -DLOWL_REGSIZE=$(LOWL_REGSIZE)
 endif
 
-ml1: runtime.c ml1.c ml1_hash.c ml1.llvm.s
+ml1: runtime.c ml1.c ml1_hash.c ml1.bc
 	$(CC) $(CPPFLAGS) $(CFLAGS) -DLOWL_ML1 $^ -o $@
 
 lowltest: runtime.c lowltest.c lowltest.llvm.s
 	$(CC) $(CPPFLAGS) $(CFLAGS) -D__RUNTIME $^ -o $@
-
-%.llvm.s: %.bc
-	llc $(LLC_OPTS) $^ -o $@
 
 %.bc: %.llvm
 	llvm-as $^ -o - | opt -O3 -o $@
@@ -31,17 +30,17 @@ ml1.llvm: ml1-mapper $(ML1SRC)
 lowltest.llvm: lowltest-mapper $(LOWLTESTSRC)
 	./lowltest-mapper $(TARGET) < $(LOWLTESTSRC) > lowltest.llvm
 
-ml1-mapper: y.tab.c lex.yy.c emitter.c ml1_emitter.c ml1_hash.c
+ml1-mapper: mapper.tab.c lex.yy.c emitter.c ml1_emitter.c ml1_hash.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -DLOWL_ML1 -o $@ $^
 
-lowltest-mapper: y.tab.c lex.yy.c emitter.c lowltest.c
+lowltest-mapper: mapper.tab.c lex.yy.c emitter.c lowltest.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^
 
-y.tab.c: mapper.y 
+mapper.tab.c: mapper.y
 	$(YACC) -d mapper.y
 
-lex.yy.c: mapper.l y.tab.c
+lex.yy.c: mapper.l mapper.tab.c
 	$(LEX) mapper.l
 
 clean:
-	-rm -f *.o lex.yy.c y.tab.c y.tab.h ml1-mapper *.llvm *.bc *.llvm.s
+	-rm -f *.o lex.yy.c mapper.tab.c mapper.tab.h ml1-mapper *.llvm *.bc *.llvm.s
